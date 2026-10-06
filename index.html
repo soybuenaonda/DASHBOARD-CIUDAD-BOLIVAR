@@ -302,7 +302,7 @@
 <div class="main-container">
   <div class="header">
     <div>
-      <h1 id="main-title">CONTROL OPERATIVO — TODOS LOS PROYECTOS</h1>
+      <h1 id="main-title">CONTROL OPERATIVO BOLIVAR</h1>
       <p id="current-date-label" style="margin: 0; color: var(--text); font-size: 13px; font-weight: 700;"></p>
     </div>
   </div>
@@ -491,13 +491,15 @@
         const zonaHub = String(getVal(r, 2)).trim(); // PROYECTO (Col C, índice 2)
         const rawSector = String(getVal(r, 5)).trim(); // ZONA OZMAP (Col F, índice 5)
         const sectorClean = cleanSectorName(rawSector);
+        
+        // Índices actualizados según columnas O, P, Q, R, S y T
         const avance = parsePct(getVal(r, 12)); // % RELEVAMIENTO (Col M, índice 12)
-        const hp = parseClean(getVal(r, 13)); // # HP (Col N, índice 13)
-        const condos = parseClean(getVal(r, 14)); // CONDOMINIOS (Col O, índice 14)
-        const hpCondos = parseClean(getVal(r, 15)); // HP POR CONDOMINIOS (Col P, índice 15)
-        const pyme = parseClean(getVal(r, 16)); // PYMES (Col Q, índice 16)
-        const ep = parseClean(getVal(r, 17)); // ENTES PUBLICOS (Col R, índice 17)
-        const cc = parseClean(getVal(r, 18)); // CENTROS COMERCIALES (Col S, índice 18)
+        const hp = parseClean(getVal(r, 14)); // # HP (Col O, índice 14)
+        const condos = parseClean(getVal(r, 15)); // CONDOMINIOS (Col P, índice 15)
+        const hpCondos = parseClean(getVal(r, 16)); // HP POR CONDOMINIOS (Col Q, índice 16)
+        const pyme = parseClean(getVal(r, 17)); // PYMES (Col R, índice 17)
+        const ep = parseClean(getVal(r, 18)); // ENTES PUBLICOS (Col S, índice 18)
+        const cc = parseClean(getVal(r, 19)); // CENTROS COMERCIALES (Col T, índice 19)
 
         if (rawSector && rawSector !== 'ZONA (OZMAP ID)') {
           const key = zonaHub + '|' + sectorClean;
@@ -619,7 +621,7 @@
       const mainTitle = document.getElementById('main-title');
       const zonaUp = String(zonaVal).toUpperCase();
 
-      mainTitle.innerText = zonaVal === 'ALL' ? "CONTROL OPERATIVO — TODOS LOS PROYECTOS" : `PROYECTO — ${zonaUp}`;
+      mainTitle.innerText = zonaVal === 'ALL' ? "CONTROL OPERATIVO BOLIVAR" : `PROYECTO — ${zonaUp}`;
 
       const avgAvance = totalRegistros > 0 ? (filteredZonas.reduce((acc, r) => acc + r.avance, 0) / totalRegistros).toFixed(1) : 0;
 
