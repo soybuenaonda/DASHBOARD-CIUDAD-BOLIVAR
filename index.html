@@ -17,6 +17,7 @@
       
       --bar-danger: #ef4444;
       --bar-warning: #f59e0b;
+      --bar-success-light: #10b981;
       --bar-success: #0f766e;
     }
     
@@ -151,8 +152,8 @@
     }
 
     .compact-kpi-title {
-      font-size: 9px;
-      color: var(--text-muted);
+      font-size: 10px;
+      color: var(--text);
       text-transform: uppercase;
       font-weight: 900;
       line-height: 1.2;
@@ -174,7 +175,7 @@
       color: white;
     }
     
-    /* === SECCIÓN DE TABLAS ESTILO EXCEL (2 COLUMNAS CON BORDES Y SOMBRAS) === */
+    /* === SECCIÓN DE TABLAS ESTILO EXCEL === */
     .chart-container { 
       background: var(--card-bg); 
       border-radius: 8px; 
@@ -192,7 +193,7 @@
     
     .custom-bar-grid-dual { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
     
-    /* Contenedor envolvente para cada tabla que genera el contorno y sombra */
+    /* Contenedor envolvente */
     .table-responsive-wrapper { 
       overflow-x: auto; 
       border: 1px solid #cbd5e1;
@@ -203,21 +204,25 @@
     
     .custom-bar-list-tabular { display: flex; flex-direction: column; min-width: 500px; }
 
-    /* Ajuste de encabezados con bordes redondeados adaptados al contenedor */
+    /* Ajuste de encabezados con alto contraste y texto centrado */
     .tabular-header-row {
       display: grid;
       grid-template-columns: minmax(110px, 1.8fr) minmax(80px, 1.2fr) 0.8fr 0.8fr 0.8fr 0.8fr 0.8fr;
       gap: 10px;
       align-items: center;
       padding: 10px 12px;
-      background-color: #f8fafc;
+      background-color: #e2e8f0; 
       border-bottom: 2px solid var(--border);
       border-radius: 8px 8px 0 0; 
-      font-size: 10px;
+      font-size: 11px;
       text-transform: uppercase;
       font-weight: 900;
-      color: var(--text-muted);
+      color: var(--text);
       letter-spacing: 0.5px;
+    }
+
+    .tabular-header-row > div {
+      text-align: center;
     }
 
     .tabular-data-row {
@@ -240,6 +245,7 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      text-align: center;
     }
 
     .col-bar {
@@ -278,7 +284,7 @@
     .col-metric {
       color: var(--text-muted);
       font-weight: 700;
-      text-align: right; 
+      text-align: center; 
     }
     
     .col-metric strong {
@@ -288,6 +294,7 @@
 
     .val-danger { background-color: var(--bar-danger); }
     .val-warning { background-color: var(--bar-warning); }
+    .val-success-light { background-color: var(--bar-success-light); }
     .val-success { background-color: var(--bar-success); }
 
     @media (max-width: 1024px) {
@@ -375,7 +382,7 @@
       </div>
     </div>
 
-    <!-- SECCIÓN DE TABLA ESTILO EXCEL (2 COLUMNAS ENMARCADAS) -->
+    <!-- SECCIÓN DE TABLA ESTILO EXCEL -->
     <div class="chart-container">
       <div class="chart-header">
         <h3 id="chart-title-label">Estatus de Relevamiento por Proyecto</h3>
@@ -390,11 +397,11 @@
             <div class="tabular-header-row">
               <div class="col-name-header">Proyecto</div>
               <div>Progreso</div>
-              <div style="text-align: right;" title="Homepass">HP</div>
-              <div style="text-align: right;" title="Condominios">Condos</div>
-              <div style="text-align: right;" title="Homepass por Condominios">HPxC</div>
-              <div style="text-align: right;">PYMES</div>
-              <div style="text-align: right;" title="Entes Públicos">E.P.</div>
+              <div title="Homepass">HP</div>
+              <div title="Condominios">Condos</div>
+              <div title="Homepass por Condominios">HPxC</div>
+              <div>PYMES</div>
+              <div title="Entes Públicos">E.P.</div>
             </div>
             <div id="tabular-data-container-1"></div>
           </div>
@@ -406,11 +413,11 @@
             <div class="tabular-header-row">
               <div class="col-name-header">Proyecto</div>
               <div>Progreso</div>
-              <div style="text-align: right;" title="Homepass">HP</div>
-              <div style="text-align: right;" title="Condominios">Condos</div>
-              <div style="text-align: right;" title="Homepass por Condominios">HPxC</div>
-              <div style="text-align: right;">PYMES</div>
-              <div style="text-align: right;" title="Entes Públicos">E.P.</div>
+              <div title="Homepass">HP</div>
+              <div title="Condominios">Condos</div>
+              <div title="Homepass por Condominios">HPxC</div>
+              <div>PYMES</div>
+              <div title="Entes Públicos">E.P.</div>
             </div>
             <div id="tabular-data-container-2"></div>
           </div>
@@ -612,7 +619,8 @@
 
     function getBarColorClass(avance) {
       if (avance < 50) return 'val-danger';
-      if (avance < 100) return 'val-warning';
+      if (avance < 80) return 'val-warning';
+      if (avance < 100) return 'val-success-light';
       return 'val-success';
     }
 
@@ -621,7 +629,13 @@
       const mainTitle = document.getElementById('main-title');
       const zonaUp = String(zonaVal).toUpperCase();
 
-      mainTitle.innerText = zonaVal === 'ALL' ? "CONTROL OPERATIVO BOLIVAR" : `PROYECTO — ${zonaUp}`;
+      const uniqueProjectsCount = new Set(filteredZonas.map(r => r.zonaHub)).size;
+
+      if (zonaVal === 'ALL') {
+        mainTitle.innerText = `CONTROL OPERATIVO BOLIVAR — PROYECTOS (${uniqueProjectsCount})`;
+      } else {
+        mainTitle.innerText = `PROYECTO — ${zonaUp}`;
+      }
 
       const avgAvance = totalRegistros > 0 ? (filteredZonas.reduce((acc, r) => acc + r.avance, 0) / totalRegistros).toFixed(1) : 0;
 
@@ -691,6 +705,7 @@
 
       displayRecords.forEach((r, i) => {
         let width = r.avance > 0 ? r.avance : 0;
+        if (width > 100) width = 100;
         let colorClass = getBarColorClass(width);
         
         let innerText = width > 20 ? `${width}%` : '';
